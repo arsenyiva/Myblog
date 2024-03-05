@@ -96,7 +96,7 @@
     <input type="text" th:field="*{username}" id="username"/>
     <div style="color:red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</div>
     <br/>
-    <label for="email">Введите email пользователя: </label>
+    <label for="email" th:text="#{label.auth.enterEmail}"> Введите email пользователя: </label>
     <input type="text" th:field="*{email}" id="email"/>
     <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</div>
     <br/>

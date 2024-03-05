@@ -39,7 +39,7 @@ public class CommentController {
             model.addAttribute("userId", currentUser.getId());
         }
         model.addAttribute("comment", new Commentary());
-        return "allUsers/addComment";
+        return "registeredUser/addComment";
     }
 
     @PostMapping("/user/article/{articleId}/comment")

@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.LocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Locale;
@@ -84,7 +83,7 @@ public class UserController {
             User currentUser = userService.findByUsername(currentUsername);
             if (currentUser != null) {
                 model.addAttribute("user", currentUser);
-                return "allUsers/authenticatedUserPage";
+                return "registeredUser/authenticatedUserPage";
             }
         }
         return "redirect:/auth/login";
