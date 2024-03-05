@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${article.title}">Title</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <style>
+        .dark-theme {
+            background-color: #0d1117;
+            color: #c9d1d9;
+        }
+
+        .dark-theme a {
+            color: #aeb4bd;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+</head>
+<body class="dark-theme">
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/mainPage">My blog</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{'/currentUserPage'}"
+                       th:text="#{label.mainPage.myPage}">My page</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="?language=en"
+                       th:text="#{label.lang.en}">ENG</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="?language=ru" th:text="#{label.lang.ru}">RU</a>
+                </li>
+            </ul>
+            <div th:if="${#httpServletRequest.userPrincipal != null}">
+                <form th:action="@{/logout}" th:method="POST" class="d-flex">
+                    <button class="btn btn-outline-danger me-2" type="submit" th:text="#{label.auth.logout}">Logout</button>
+                </form>
+            </div>
+            <div th:unless="${#httpServletRequest.userPrincipal != null}">
+                <form class="d-flex" role="search">
+                    <a href="/auth/login" class="btn btn-outline-primary me-2">
+                        <span th:text="#{label.mainPage.auth}">Вход</span>
+                    </a>
+                    <a href="/auth/registration" class="btn btn-outline-primary">
+                        <span th:text="#{label.mainPage.registration}">Регистрация</span>
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>
+<br/>
+<br/>
+<div class="container">
+    <h1 th:text="${article.title}"></h1>
+    <p th:text="${article.content}"></p>
+    <p th:text="${#temporals.format(article.publishTime, 'dd.MM.yyyy HH:mm')}"></p>
+    <p>
+        <span th:text="#{label.articlePage.author}">Author:</span>
+        <span th:text="${article.user.username}"></span>
+    </p>
+    <a th:text="#{label.articlePage.back}" th:href="@{'/user/' + ${article.user.id}}">Back to user</a>
+
+    <hr>
+    <h2>Comments</h2>
+    <div>
+        <ul>
+            <li th:each="comment : ${comments}">
+                <span th:text="${comment.user.username}"></span>:
+                <span th:text="${#temporals.format(comment.publishTime, 'dd.MM.yyyy HH:mm')}"></span>:
+                <span th:text="${comment.text}"></span>
+            </li>
+        </ul>
+    </div>
+    <a th:if="${#httpServletRequest.userPrincipal != null}"
+       th:href="@{'/user/article/' + ${article.id} + '/comment'}"
+       th:text="#{label.comment.add}">Add a Comment</a>
+    <hr>
+    <a th:if="${isOwner}" th:href="@{'/user/' + ${article.user.id} + '/article/' + ${article.id} + '/update'}" th:text="#{label.userPage.editArticle}">Edit
+        Article</a>
+
+
+</div>
+</body>
+</html>

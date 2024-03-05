@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{label.userPage.title}">User Page</title>
+    <style>
+        .dark-theme {
+            background-color: #0d1117;
+            color: #c9d1d9;
+        }
+
+        .dark-theme a {
+            color: #aeb4bd;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+</head>
+
+<body class="dark-theme">
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/maiPage">My blog</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{'/currentUserPage'}" th:text="#{label.mainPage.myPage}">My page</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="?language=en"
+                       th:text="#{label.lang.en}">ENG</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="?language=ru" th:text="#{label.lang.ru}">RU</a>
+                </li>
+            </ul>
+            <div th:if="${#httpServletRequest.userPrincipal != null}">
+                <form th:action="@{/logout}" th:method="POST" class="d-flex">
+                    <button class="btn btn-outline-danger me-2" type="submit" th:text="#{label.auth.logout}">Logout</button>
+                </form>
+            </div>
+            <div th:unless="${#httpServletRequest.userPrincipal != null}">
+                <form class="d-flex" role="search">
+                    <a href="/auth/login" class="btn btn-outline-primary me-2">
+                        <span th:text="#{label.mainPage.auth}">Вход</span>
+                    </a>
+                    <a href="/auth/registration" class="btn btn-outline-primary">
+                        <span th:text="#{label.mainPage.registration}">Регистрация</span>
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>
+<br/>
+<br/>
+<h1 th:text="#{label.userPage.title}">User Page</h1>
+<div>
+    <h2 th:text="#{label.userPage.details}">User Details:</h2>
+    <span th:text="${user.username} "></span><span th:text="${user.yearOfBirth}"></span>
+</div>
+
+<div>
+    <h2 th:text="#{label.userPage.articles}">User Articles:</h2>
+    <ul th:if="${user.articles.isEmpty()}">
+        <li>No articles found</li>
+    </ul>
+    <ul th:if="${not user.articles.isEmpty()}">
+        <li th:each="article : ${user.articles}">
+            <a th:href="@{'/user/' + ${article.user.id} + '/article/' + ${article.id}}">
+                <span th:text="${article.title}"></span>
+            </a>
+            <span th:text="${#temporals.format(article.publishTime, 'dd.MM.yyyy HH:mm')}"></span>
+        </li>
+    </ul>
+</div>
+
+
+</div>
+<div th:if="${user.banned}" style="color: red; font-size: 18px; margin-top: 20px;">
+    USER IS BANNED
+</div>
+
+</body>
+</html>
